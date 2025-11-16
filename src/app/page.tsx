@@ -21,7 +21,7 @@ export default function Home() {
           <Card>
             <Flex direction={"column"} gap={"2"} className="p-2">
               <Heading as="h2" mb="2" trim="start">Statystyki</Heading>
-              <Flex gap={"2"}></Flex>
+              <Flex gap={"2"}>chuj może kiedyś tu coś bedzie ale kurwa zalezy jak mi sie zachce</Flex>
             </Flex>
           </Card>
         </Flex>
