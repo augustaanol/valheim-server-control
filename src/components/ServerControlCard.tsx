@@ -40,33 +40,37 @@ export default function ServerControlCard() {
 
   return (
     <Card>
-    <Flex direction="column" gap="2" className="p-2">
-        <Flex justify="between">
-        <Heading as="h2" mb="2" trim="start">Status</Heading>
-        <Badge color={running ? "green" : "red"}>
-            {running ? "Online" : "Offline"}
-        </Badge>
-        </Flex>
-        <Flex gap="2">
-        <Button
-            variant="surface"
-            color="green"
-            disabled={running || loading}
-            onClick={() => handleAction("start")}
-        >
-            Run server
-        </Button>
-        <Button
-            variant="surface"
-            color="red"
-            disabled={!running || loading}
-            onClick={() => handleAction("stop")}
-        >
-            Stop server
-        </Button>
-        </Flex>
-        <Text as="p">Serwer {running ? "działa" : "jest wyłączony"}</Text>
-    </Flex>
+      <Flex direction="column" gap="4" className="p-2">
+          <Flex justify="between">
+            <Heading as="h2" mb="2" trim="start">Status</Heading>
+            <Badge color={running ? "green" : "red"}>
+                {running ? "Online" : "Offline"}
+            </Badge>
+          </Flex>
+          <Flex gap="2">
+            <Button
+                variant="surface"
+                color="green"
+                disabled={running || loading}
+                onClick={() => handleAction("start")}
+            >
+                Run server
+            </Button>
+            <Button
+                variant="surface"
+                color="red"
+                disabled={!running || loading}
+                onClick={() => handleAction("stop")}
+            >
+                Stop server
+            </Button>
+          </Flex>
+
+          <Flex align={"center"} gap="2">
+            <Text>Gracze online:</Text>
+            <Badge color="gray">0</Badge>
+          </Flex>
+      </Flex>
     </Card>
   );
 }
