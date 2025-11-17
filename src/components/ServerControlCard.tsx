@@ -7,6 +7,7 @@ export default function ServerControlCard() {
   const [running, setRunning] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // ---- STATUS KONTENERA ----
   const fetchStatus = async () => {
     setLoading(true);
     try {
@@ -26,7 +27,7 @@ export default function ServerControlCard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action }),
       });
-      await fetchStatus(); // odśwież status po akcji
+      await fetchStatus();
     } finally {
       setLoading(false);
     }
@@ -34,63 +35,82 @@ export default function ServerControlCard() {
 
   useEffect(() => {
     fetchStatus();
-    const interval = setInterval(fetchStatus, 5000); // odśwież co 5s
+    const interval = setInterval(fetchStatus, 5000);
     return () => clearInterval(interval);
   }, []);
 
-
-  const [players, setPlayers] = useState<number | null>(null);
+  // ---- LICZBA AKTYWNYCH GRACZY ----
+  const [playerCount, setPlayerCount] = useState<number | null>(null);
 
   useEffect(() => {
-    async function load() {
+    async function loadPlayers() {
       try {
         const res = await fetch("/api/active-players");
         const data = await res.json();
-        setPlayers(data.online);
-      } catch (e) {
-        setPlayers(null);
+
+        if (data.error) {
+          setPlayerCount(null);
+        } else {
+          setPlayerCount(data.online); // backend zwraca { online: X }
+        }
+      } catch {
+        setPlayerCount(null);
       }
     }
 
-    load();
-    const interval = setInterval(load, 5000);
+    loadPlayers();
+    const interval = setInterval(loadPlayers, 5000);
     return () => clearInterval(interval);
   }, []);
 
   return (
     <Card>
       <Flex direction="column" gap="4" className="p-2">
-          <Flex justify="between">
-            <Heading as="h2" mb="2" trim="start">Status</Heading>
-            <Badge color={running ? "green" : "red"}>
-                {running ? "Online" : "Offline"}
-            </Badge>
-          </Flex>
-          <Flex gap="2">
-            <Button
-                variant="surface"
-                color="green"
-                disabled={running || loading}
-                onClick={() => handleAction("start")}
-            >
-                Run server
-            </Button>
-            <Button
-                variant="surface"
-                color="red"
-                disabled={!running || loading}
-                onClick={() => handleAction("stop")}
-            >
-                Stop server
-            </Button>
-          </Flex>
+        
+        {/* --- STATUS SERWERA --- */}
+        <Flex justify="between">
+          <Heading as="h2" mb="2" trim="start">Status</Heading>
+          <Badge color={running ? "green" : "red"}>
+            {running ? "Online" : "Offline"}
+          </Badge>
+        </Flex>
 
-          <Flex align="center" gap="2">
-            <Text>Gracze online:</Text>
-            <Badge color={players ? "green" : "gray"}>
-              {players === null ? "?" : players}
-            </Badge>
-          </Flex>
+        <Flex gap="2">
+          <Button
+            variant="surface"
+            color="green"
+            disabled={running || loading}
+            onClick={() => handleAction("start")}
+          >
+            Run server
+          </Button>
+
+          <Button
+            variant="surface"
+            color="red"
+            disabled={!running || loading}
+            onClick={() => handleAction("stop")}
+          >
+            Stop server
+          </Button>
+        </Flex>
+
+        {/* --- AKTYWNI GRACZE --- */}
+        <Flex align="center" gap="2">
+          <Text>Gracze online:</Text>
+          <Badge
+            color={
+              playerCount === null
+                ? "gray"
+                : playerCount > 0
+                ? "green"
+                : "gray"
+            }
+          >
+            {playerCount === null ? "?" : playerCount}
+          </Badge>
+        </Flex>
+
       </Flex>
     </Card>
   );

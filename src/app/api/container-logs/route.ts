@@ -7,7 +7,7 @@ import https from "https";
 // 🔑 Ustaw w .env.local
 const PORTAINER_URL = process.env.PORTAINER_URL!;
 const PORTAINER_TOKEN = process.env.PORTAINER_TOKEN!;
-const CONTAINER_ID = process.env.CONTAINER_ID!;
+const CONTAINER_NAME = process.env.CONTAINER_NAME!;
 // ID endpointa z URL Portainera (np. #!/3/...)
 const ENDPOINT_ID = 3; 
 
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
   
   try {
     const res = await fetch(
-      `${PORTAINER_URL}/endpoints/${ENDPOINT_ID}/docker/containers/${CONTAINER_ID}/json`,
+      `${PORTAINER_URL}/endpoints/${ENDPOINT_ID}/docker/containers/${CONTAINER_NAME}/json`,
       { 
         headers: getHeaders(), 
         agent: httpsAgent,
@@ -74,7 +74,7 @@ export async function GET(req: NextRequest) {
 // --- LOGIKA POBIERANIA LOGÓW (Wewnętrzna funkcja, Endpoint: /api?logs=true) ---
 async function GET_LOGS() {
   try {
-    const logUrl = new URL(`${PORTAINER_URL}/endpoints/${ENDPOINT_ID}/docker/containers/${CONTAINER_ID}/logs`);
+    const logUrl = new URL(`${PORTAINER_URL}/endpoints/${ENDPOINT_ID}/docker/containers/${CONTAINER_NAME}/logs`);
     logUrl.searchParams.append("stdout", "true");
     logUrl.searchParams.append("stderr", "true");
     logUrl.searchParams.append("timestamps", "true");
@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
     }
 
     const res = await fetch(
-      `${PORTAINER_URL}/endpoints/${ENDPOINT_ID}/docker/containers/${CONTAINER_ID}/${action}`,
+      `${PORTAINER_URL}/endpoints/${ENDPOINT_ID}/docker/containers/${CONTAINER_NAME}/${action}`,
       { method: "POST", headers: getHeaders(), agent: httpsAgent } as FetchWithAgent
     );
 

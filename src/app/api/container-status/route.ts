@@ -6,7 +6,7 @@ import https from "https";
 
 const PORTAINER_URL = process.env.PORTAINER_URL!;
 const PORTAINER_TOKEN = process.env.PORTAINER_TOKEN!;
-const CONTAINER_ID = process.env.CONTAINER_ID!;
+const CONTAINER_NAME = process.env.CONTAINER_NAME!;
 const endpointId = 3;
 
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
@@ -24,7 +24,7 @@ export async function GET() {
     };
 
     const res = await fetch(
-      `${PORTAINER_URL}/endpoints/${endpointId}/docker/containers/${CONTAINER_ID}/json`,
+      `${PORTAINER_URL}/endpoints/${endpointId}/docker/containers/${CONTAINER_NAME}/json`,
       { headers, agent: httpsAgent } as FetchWithAgent
     );
 
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
     };
 
     const res = await fetch(
-      `${PORTAINER_URL}/endpoints/${endpointId}/docker/containers/${CONTAINER_ID}/${action}`,
+      `${PORTAINER_URL}/endpoints/${endpointId}/docker/containers/${CONTAINER_NAME}/${action}`,
       { method: "POST", headers, agent: httpsAgent } as FetchWithAgent
     );
 
