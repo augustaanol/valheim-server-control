@@ -107,7 +107,7 @@ export default function ServerControlCard() {
         
         {/* --- GŁÓWNY STATUS SERWERA --- */}
         <Flex justify="between">
-          <Heading as="h2" mb="2" trim="start">Status</Heading>
+          <Heading as="h2" mb="2" trim="start">Status serwera</Heading>
           {/* Tutaj wyświetlamy: Offline (red) / Starting (yellow) / Online (green) */}
           <Badge color={statusColor}>
             {statusLabel}
