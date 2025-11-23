@@ -2,6 +2,8 @@
 FROM node:20 AS builder
 WORKDIR /app
 
+ARG NEXT_PUBLIC_BACKEND_URL
+ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
 # kopiujemy tylko package.json + lock, aby bazowy layer cache'ował instalację deps
 COPY package*.json ./
 
@@ -19,6 +21,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=builder /app ./
+
+ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
 
 EXPOSE 3000
 
