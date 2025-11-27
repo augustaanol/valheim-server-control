@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Pirata_One } from "next/font/google";
 import "./globals.css";
 import "@radix-ui/themes/styles.css";
-import { Theme, Container, Flex, Heading } from "@radix-ui/themes";
+import { Theme, Flex, Heading } from "@radix-ui/themes";
 import Image from "next/image";
 
 const geistSans = Geist({
@@ -52,7 +52,7 @@ export default function RootLayout({
           direction="column"
           className="px-5 md:px-0"
           >
-            <Container size={{md:"4", initial: "1"}} className="flex flex-col min-h-screen">
+            <div className="mx-auto 2xl:w-2/3 xl:w-4/5 w-9/10 flex flex-col min-h-screen mb-8">
               <Flex align={"center"} className="pt-6 pb-12 gap-6 sticky top-0">
                 <Image alt="logo" src="/images/valheim_logo_large.webp" width={"160"} height={"100"}/>
                 <Heading 
@@ -64,7 +64,7 @@ export default function RootLayout({
                 </Heading>
               </Flex>
               {children}
-            </Container>
+            </div>
           </Flex>
         </Theme>
       </body>
