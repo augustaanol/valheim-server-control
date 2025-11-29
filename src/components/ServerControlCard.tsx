@@ -40,7 +40,7 @@ export default function ServerControlCard() {
     if (!skipLoadingState) setIsInitialLoading(true);
     
     try {
-      const res = await fetch(`${BACKEND_URL}/api/server_status`);
+      const res = await fetch(`${BACKEND_URL}/api/server-status`);
       if (!res.ok) throw new Error("Network response was not ok");
       
       const data = await res.json();
@@ -76,7 +76,7 @@ export default function ServerControlCard() {
     // Kolejne pobrania bez flagi loading (skipLoadingState=true)
     const interval = setInterval(() => {
       fetchStatus(true);
-    }, 2000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [fetchStatus]);
@@ -121,8 +121,6 @@ export default function ServerControlCard() {
     statusColor = "green";
   }
   
-  // Pomocnicza funkcja do formatowania pozycji
-  const fmtPos = (val: number) => val.toFixed(0);
 
   return (
     <Card>
@@ -190,7 +188,7 @@ export default function ServerControlCard() {
           <Flex direction="column" gap="2">
             {playersList.map((player) => (
               // POPRAWKA: Użycie steam_id jako klucza
-              <Card key={player.steam_id || player.name}>
+              <Card key={player.name}>
                 <Flex justify="between" align="center">
                   <Flex direction="column" gap="1">
                     <Text weight="bold">{player.name}</Text>
@@ -208,7 +206,7 @@ export default function ServerControlCard() {
                       <Text size="1" color="gray">Pos:</Text>
                       <Badge color="gray" size="1">
                           {player.position 
-                            ? `${fmtPos(player.position[0])}, ${fmtPos(player.position[1])}, ${fmtPos(player.position[2])}` 
+                            ? `${player.position[0]}, ${player.position[1]}, ${player.position[2]}` 
                             : "?"}
                       </Badge>
                     </Flex>

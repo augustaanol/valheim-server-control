@@ -1,7 +1,8 @@
 "use client";
 
-import { Flex, Card, Heading } from "@radix-ui/themes";
+import { Flex } from "@radix-ui/themes";
 import ServerControlCard from "@/components/ServerControlCard";
+import ServerStatsCard from "@/components/ServerStatsCard";
 
 export default function Home() {
 
@@ -17,12 +18,7 @@ export default function Home() {
         </Flex>
 
         <Flex direction={"column"} className="2xl:w-3/4 lg:w-3/5" gap={defaultGap}>
-          <Card className="h-full">
-            <Flex direction={"column"} gap={"2"} className="p-4">
-              <Heading as="h2" mb="2" trim="start">Statystyki</Heading>
-              <Flex gap={"2"}>chuj może kiedyś tu coś bedzie ale kurwa zalezy jak mi sie zachce</Flex>
-            </Flex>
-          </Card>
+          <ServerStatsCard />
         </Flex>
       </Flex>
       
