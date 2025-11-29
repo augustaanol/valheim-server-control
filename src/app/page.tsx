@@ -2,7 +2,6 @@
 
 import { Flex, Card, Heading } from "@radix-ui/themes";
 import ServerControlCard from "@/components/ServerControlCard";
-import { ServerLogCard } from "@/components/ServerLogCard";
 
 export default function Home() {
 
@@ -26,8 +25,6 @@ export default function Home() {
           </Card>
         </Flex>
       </Flex>
-			
-      <ServerLogCard />
       
 		</Flex>
   );

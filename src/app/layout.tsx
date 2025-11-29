@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Pirata_One } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "@radix-ui/themes/styles.css";
-import { Theme, Flex, Heading } from "@radix-ui/themes";
-import Image from "next/image";
+import { Theme, Flex } from "@radix-ui/themes";
+import Navbar from "@/components/navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,10 +15,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const pirataOne = Pirata_One({
-  weight: "400",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "ADiheim",
@@ -50,19 +46,9 @@ export default function RootLayout({
             minHeight: "100vh",
           }}
           direction="column"
-          className="px-5 md:px-0"
           >
-            <div className="mx-auto 2xl:w-2/3 xl:w-4/5 w-9/10 flex flex-col min-h-screen mb-8">
-              <Flex align={"center"} className="pt-6 pb-12 gap-6 sticky top-0">
-                <Image alt="logo" src="/images/valheim_logo_large.webp" width={"160"} height={"100"}/>
-                <Heading 
-                    as="h1" 
-                    size={"8"} 
-                    style={{ fontFamily: pirataOne.style.fontFamily }}
-                  >
-                    ADiheim server companion
-                </Heading>
-              </Flex>
+            <div className="mx-auto 2xl:w-2/3 xl:w-4/5 w-[92%] flex flex-col min-h-screen mb-8">
+              <Navbar titleText="ADiheim server companion"/>
               {children}
             </div>
           </Flex>
