@@ -35,7 +35,7 @@ export default function RootLayout({
         <ServerPoller />
         <Theme 
           appearance="dark" 
-          accentColor="amber" 
+          accentColor="gray" 
           radius="full" 
           grayColor="mauve"
           >
