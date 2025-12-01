@@ -51,7 +51,7 @@ export default function ServerStatsCard() {
           {stats.map((stat, i) => (
             <Card
               key={i}
-              className="w-full sm:w-1/3 md:w-1/4 lg:w-1/6 2xl:w-1/10 aspect-square flex items-center justify-center"
+              className="w-1/3 md:w-1/4 lg:w-1/6 2xl:w-1/10 aspect-square flex items-center justify-center"
             >
               <Flex
                 direction="column"

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
 import {
   Flex,
   Card,
@@ -11,102 +10,25 @@ import {
   HoverCard,
   Grid
 } from "@radix-ui/themes";
+import { useServerStore } from "@/store/serverStore";
 
 type BadgeColor = "green" | "red" | "yellow" | "gray";
 
-type PlayersList = {
-  name: string;
-  hp: [number, number] | null;
-  steam_id: string;
-  position: [number, number, number] | null;
-};
-
 export default function ServerControlCard() {
-  const [running, setRunning] = useState(false);
-  const [serverActive, setServerActive] = useState(false);
-  // Zmiana: isInitialLoading służy tylko do pierwszego renderu, żeby nie migać co 2s
-  const [isInitialLoading, setIsInitialLoading] = useState(true); 
-  const [actionLoading, setActionLoading] = useState(false);
-  const [playerCount, setPlayerCount] = useState<number | null>(null);
-  const [playersList, setPlayersList] = useState<PlayersList[] | null>(null);
-  const [serverName, setServerName] = useState<string | null>(null);
-  const [serverSteamID, setServerSteamID] = useState<string | null>(null);
+  const {
+    running,
+    serverActive,
+    isInitialLoading,
+    actionLoading,
+    playerCount,
+    playersList,
+    serverName,
+    serverSteamID,
+    handleAction,
+  } = useServerStore();
 
-  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000"; // Fallback
 
-  // ---- 1. STATUS KONTENERA I SERWERA ----
-  const fetchStatus = useCallback(async (skipLoadingState = false) => {
-    // Nie ustawiamy loading na true przy cyklicznym odświeżaniu
-    if (!skipLoadingState) setIsInitialLoading(true);
-    
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/server-status`);
-      if (!res.ok) throw new Error("Network response was not ok");
-      
-      const data = await res.json();
-
-      setRunning(data.server_status !== "offline");
-      setServerActive(data.server_status === "online");
-      setPlayerCount(data.player_count);
-      setServerName(data.server_name || null);
-      setServerSteamID(data.steam_id || null);
-
-      if (data.players && Array.isArray(data.players)) {
-        setPlayersList(data.players);
-      } else {
-        setPlayersList([]);
-      }
-    } catch (error) {
-      console.error("Błąd pobierania statusu serwera:", error);
-      // W razie błędu zakładamy, że offline, ale nie resetujemy wszystkiego drastycznie
-      // chyba że serwer faktycznie nie odpowiada.
-      setRunning(false); 
-      setServerActive(false);
-      setPlayerCount(null);
-      setPlayersList([]);
-    } finally {
-      setIsInitialLoading(false);
-    }
-  }, [BACKEND_URL]);
-
-  useEffect(() => {
-    // Pierwsze pobranie z loadingiem
-    fetchStatus();
-
-    // Kolejne pobrania bez flagi loading (skipLoadingState=true)
-    const interval = setInterval(() => {
-      fetchStatus(true);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [fetchStatus]);
-
-  // ---- 2. AKCJE START/STOP ----
-  const handleAction = async (action: "start" | "stop") => {
-    setActionLoading(true);
-    try {
-      await fetch(`${BACKEND_URL}/api/container-control`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action })
-      });
-
-      // Natychmiastowe odświeżenie po akcji
-      await fetchStatus(true); 
-
-      if (action === "stop") {
-        setServerActive(false);
-        setPlayerCount(null);
-        setPlayersList([]);
-      }
-    } catch (err) {
-      console.error("Błąd wysyłania komendy:", err);
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  // ---- LOGIKA WYŚWIETLANIA STATUSU ----
+  // --- logika statusu ---
   let statusLabel = "Offline";
   let statusColor: BadgeColor = "red";
 
@@ -120,12 +42,11 @@ export default function ServerControlCard() {
     statusLabel = "Online";
     statusColor = "green";
   }
-  
 
   return (
     <Card>
       <Flex direction="column" gap="3" className="p-4">
-        {/* --- STATUS SERWERA --- */}
+        {/* STATUS SERWERA */}
         <Flex justify="between" align="center" className="mb-2">
           <HoverCard.Root>
             <HoverCard.Trigger>
@@ -143,22 +64,20 @@ export default function ServerControlCard() {
               </Grid>
             </HoverCard.Content>
           </HoverCard.Root>
-          
-          {/* Opcjonalnie: Pokaż spinner jeśli to pierwsze ładowanie */}
+
           {isInitialLoading ? (
-             <Badge color="gray">Ładowanie...</Badge>
+            <Badge color="gray">Ładowanie...</Badge>
           ) : (
-             <Badge color={statusColor}>{statusLabel}</Badge>
+            <Badge color={statusColor}>{statusLabel}</Badge>
           )}
         </Flex>
 
-        {/* --- PRZYCISKI START/STOP --- */}
+        {/* PRZYCISKI START/STOP */}
         <Flex gap="2">
           <Button
             variant="surface"
             color="green"
-            // Blokujemy start też gdy serwer już wstaje (yellow status)
-            disabled={running || actionLoading} 
+            disabled={running || actionLoading}
             onClick={() => handleAction("start")}
           >
             Run server
@@ -173,7 +92,7 @@ export default function ServerControlCard() {
           </Button>
         </Flex>
 
-        {/* --- GRACZE ONLINE --- */}
+        {/* GRACZE ONLINE */}
         {serverActive && (
           <Flex align="center" gap="2" className="mt-2">
             <Text weight="bold">Gracze online:</Text>
@@ -183,12 +102,11 @@ export default function ServerControlCard() {
           </Flex>
         )}
 
-        {/* --- LISTA GRACZY --- */}
+        {/* LISTA GRACZY */}
         {serverActive && playersList && playersList.length > 0 && (
           <Flex direction="column" gap="2">
             {playersList.map((player) => (
-              // POPRAWKA: Użycie steam_id jako klucza
-              <Card key={player.name}>
+              <Card key={player.steam_id}>
                 <Flex justify="between" align="center">
                   <Flex direction="column" gap="1">
                     <Text weight="bold">{player.name}</Text>
@@ -199,15 +117,15 @@ export default function ServerControlCard() {
                     <Flex gap="2" align="center">
                       <Text size="1" color="gray">HP:</Text>
                       <Badge color="gray" size="1">
-                          {player.hp ? `${player.hp[0]} / ${player.hp[1]}` : "?"}
+                        {player.hp ? `${player.hp[0]} / ${player.hp[1]}` : "?"}
                       </Badge>
                     </Flex>
                     <Flex gap="2" align="center">
                       <Text size="1" color="gray">Pos:</Text>
                       <Badge color="gray" size="1">
-                          {player.position 
-                            ? `${player.position[0]}, ${player.position[1]}, ${player.position[2]}` 
-                            : "?"}
+                        {player.position
+                          ? `${player.position[0]} ${player.position[1]} ${player.position[2]}`
+                          : "?"}
                       </Badge>
                     </Flex>
                   </Flex>

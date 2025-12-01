@@ -4,6 +4,7 @@ import "./globals.css";
 import "@radix-ui/themes/styles.css";
 import { Theme, Flex } from "@radix-ui/themes";
 import Navbar from "@/components/navbar";
+import ServerPoller from "@/components/ServerPoller";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+        <ServerPoller />
         <Theme 
           appearance="dark" 
           accentColor="amber" 
