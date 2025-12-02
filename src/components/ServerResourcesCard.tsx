@@ -41,7 +41,7 @@ export default function ServerResourcesCard() {
     };
 
     fetchStats();
-    const intervalId = setInterval(fetchStats, 2000);
+    const intervalId = setInterval(fetchStats, 1000);
 
     return () => clearInterval(intervalId);
   }, [BACKEND_URL, CONTAINER_NAME]);
