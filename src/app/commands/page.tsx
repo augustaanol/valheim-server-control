@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex, Card } from "@radix-ui/themes";
+import { Flex } from "@radix-ui/themes";
 import TeleportCard from "@/components/TeleportCard";
 
 export default function CommandsPage() {
