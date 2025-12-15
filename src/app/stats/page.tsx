@@ -10,14 +10,14 @@ export default function Stats() {
 
     return (
         <Flex direction="column" gap={defaultGap}>
-            <ServerStatsCard />
+            <ServerStatsCard size="small" showMore={true} />
             <Flex direction={{initial: "column", md: "row"}} gap={defaultGap}>
-                <Card className="w-full lg-w-1/2 min-h-30">
+                <Card className="w-full lg:w-1/2 min-h-30">
                     <Flex direction={"column"} className="p-4">
-                        <Heading as="h1">Statystyki</Heading>
+                        <Heading as="h1">Gracze</Heading>
                     </Flex>
                 </Card>
-                <Card className="w-full lg-w-1/2 min-h-30"></Card>
+                <Card className="w-full lg:w-1/2 min-h-30"></Card>
             </Flex>
         </Flex>
     )
