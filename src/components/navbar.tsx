@@ -16,6 +16,7 @@ const pirataOne = Pirata_One({
 
 const navLinks = [
     { name: "Home", href: "/", alwaysVisible: true },
+    { name: "To do", href: "/todo", alwaysVisible: true },
     { name: "Serwer", href: "/server", alwaysVisible: false },
     { name: "Statystyki", href: "/stats", alwaysVisible: true },
     { name: "Komendy", href: "/commands", alwaysVisible: false },

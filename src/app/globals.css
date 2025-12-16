@@ -3,8 +3,6 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --container-3: 1136px; /* domyślnie 880px */
-  --container-4: 1500px; /* domyślnie 1136px */
 }
 
 @theme inline {
