@@ -196,6 +196,30 @@ export const mockTodos: ToDoListType[] = [
                 createdAt: "2025-12-05T16:00:00Z",
                 authorId: 3,
             },
+            {
+                id: 15,
+                content: "Zrobię honey + cooked meat",
+                createdAt: "2025-12-05T16:00:00Z",
+                authorId: 3,
+            },
+            {
+                id: 16,
+                content: "Zrobię honey + cooked meat",
+                createdAt: "2025-12-05T16:00:00Z",
+                authorId: 3,
+            },
+            {
+                id: 17,
+                content: "Zrobię honey + cooked meat",
+                createdAt: "2025-12-05T16:00:00Z",
+                authorId: 3,
+            },
+            {
+                id: 18,
+                content: "Zrobię honey + cooked meat",
+                createdAt: "2025-12-05T16:00:00Z",
+                authorId: 3,
+            },
         ],
     },
 ];
@@ -207,7 +231,7 @@ export default function ToDoList() {
     const defaultGap: string = "4";
 
     return (
-        <Flex gap={defaultGap} justify={"between"} className="h-[70vh] pt-4">
+        <Flex direction={{initial: "column", sm: "row"}} gap={defaultGap} justify={"between"} className="h-[70vh] pt-4">
             
             <ToDoColumn
                 title="To Do"
