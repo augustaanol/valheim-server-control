@@ -233,27 +233,42 @@ export default function ToDoList() {
 
     const defaultGap: string = "4";
 
+    const changeStatus = (taskId: number, newStatus: ToDoListType["status"]) => {
+    setTodos(prev =>
+        prev.map(task =>
+            task.id === taskId
+                ? { ...task, status: newStatus }
+                : task
+        )
+    );
+
+    // TODO: API PATCH /tasks/:id
+};
+
     return (
         <Flex direction={{initial: "column", sm: "row"}} gap={defaultGap} justify={"between"} className="h-[70vh] pt-4">
             
             <ToDoColumn
                 title="To Do"
-                tasks={mockTodos.filter(t => t.status === "todo")}
+                tasks={todos.filter(t => t.status === "todo")}
+                onStatusChange={changeStatus}
             />
 
             <Separator orientation="vertical" size={"4"} />
 
             <ToDoColumn
                 title="In progress"
-                tasks={mockTodos.filter(t => t.status === "in-progress")}
+                tasks={todos.filter(t => t.status === "in-progress")}
+                onStatusChange={changeStatus}
             />
 
             <Separator orientation="vertical" size={"4"} />
 
             <ToDoColumn
                 title="Done"
-                tasks={mockTodos.filter(t => t.status === "done")}
+                tasks={todos.filter(t => t.status === "done")}
                 showTag={false}
+                onStatusChange={changeStatus}
             />
         </Flex>
     )

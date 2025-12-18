@@ -1,5 +1,5 @@
 import { ToDoItem } from "@/types/todo";
-import { Flex, Heading, Text, Card, Dialog, Button, Badge, TextArea, TextField, DataList, Box, Separator, ScrollArea } from "@radix-ui/themes";
+import { Flex, Heading, Text, Card, Dialog, Button, Badge, TextArea, TextField, DataList, Box, Separator, ScrollArea, Select } from "@radix-ui/themes";
 import { Pencil1Icon, CheckIcon, PaperPlaneIcon } from "@radix-ui/react-icons";
 import { formatDate, formatTime } from "@/utils/formatDateTime";
 import { useState } from "react";
@@ -8,9 +8,10 @@ interface ToDoColumnProps {
     title: string;
     tasks: ToDoItem[];
     showTag?: boolean;
+    onStatusChange: (taskId: number, status: ToDoItem["status"]) => void;
 }
 
-export function ToDoColumn({ title, tasks, showTag=true }: ToDoColumnProps) {
+export function ToDoColumn({ title, tasks, showTag=true, onStatusChange }: ToDoColumnProps) {
 
     const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
     const [editedTitles, setEditedTitles] = useState<Record<number, string>>({});
@@ -110,6 +111,20 @@ export function ToDoColumn({ title, tasks, showTag=true }: ToDoColumnProps) {
                                     </Button>
                                 </Flex>
                             )}
+
+                            <Select.Root
+                                value={task.status}
+                                onValueChange={(value) =>
+                                    onStatusChange(task.id, value as ToDoItem["status"])
+                                }
+                            >
+                                <Select.Trigger />
+                                <Select.Content>
+                                    <Select.Item value="todo">To Do</Select.Item>
+                                    <Select.Item value="in-progress">In progress</Select.Item>
+                                    <Select.Item value="done">Done</Select.Item>
+                                </Select.Content>
+                            </Select.Root>
                             
                         </Flex>
 
