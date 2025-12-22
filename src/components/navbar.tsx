@@ -106,6 +106,12 @@ export default function Navbar({ titleText }: {titleText: string }) {
                         </Box>
                         );
                     })}
+                    <Box p="1" width={"full"}>
+                        <DropdownMenu.Item>
+                            <NavbarUserAvatar />
+                        </DropdownMenu.Item>
+                    </Box>
+                    
                 </DropdownMenu.Content>
             </DropdownMenu.Root>
         </Flex>

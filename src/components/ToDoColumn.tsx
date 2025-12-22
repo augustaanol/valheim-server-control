@@ -8,11 +8,16 @@ import { useServerStore } from "@/store/serverStore";
 import { useUserStore } from "@/store/useUserStore";
 import { AddTaskDialog } from "@/components/AddTaskDialog";
 import { MessageCircle } from "@deemlol/next-icons";
+import {
+  useDraggable,
+  useDroppable
+} from "@dnd-kit/core";
 
 
 interface ToDoColumnProps {
     title: string;
     tasks: ToDoItem[];
+    status: ToDoItem["status"];
     showTag?: boolean;
     onUpdateTask: (id: number, update: TaskUpdate) => void;
     onAddComment: (taskId: number, content: string) => void;
@@ -21,7 +26,41 @@ interface ToDoColumnProps {
     onDeleteTask: (id: number) => void;
 }
 
-export function ToDoColumn({ title, tasks, showTag=true, onUpdateTask, onAddComment, onDeleteComment, onAddTask, onDeleteTask }: ToDoColumnProps) {
+
+function DraggableTask({
+  task,
+  children,
+}: {
+  task: { id: number };
+  children: React.ReactNode;
+}) {
+  const { attributes, listeners, setNodeRef } = useDraggable({
+    id: task.id,
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+    >
+      {children}
+    </div>
+  );
+}
+
+
+
+
+
+
+
+export function ToDoColumn({ title, tasks, status, showTag=true, onUpdateTask, onAddComment, onDeleteComment, onAddTask, onDeleteTask }: ToDoColumnProps) {
+
+    const { setNodeRef, isOver } = useDroppable({
+        id: status,
+    });
+
 
     const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
     const [editedTitles, setEditedTitles] = useState<Record<number, string>>({});
@@ -68,8 +107,8 @@ export function ToDoColumn({ title, tasks, showTag=true, onUpdateTask, onAddComm
 
 
     return (
-        <Flex direction={"column"} align={"start"} gap={"2"} className="w-full lg:w-1/3 pl-4">
-            <Flex justify={"between"} className="w-full pr-4">
+        <Flex direction={"column"} align={"start"} gap={"2"} className="w-full lg:w-1/3 ml-2">
+            <Flex justify={"between"} className="w-full mr-4">
                 <Heading size={"4"} mb="4">{title}</Heading>
                 {onAddTask && title === "To Do" && (
                     <AddTaskDialog
@@ -80,17 +119,31 @@ export function ToDoColumn({ title, tasks, showTag=true, onUpdateTask, onAddComm
             </Flex>
 
             <ScrollArea scrollbars="vertical">
-            <Flex direction={"column"} gap={"3"} className="pr-4">
+            <Flex
+                ref={setNodeRef}
+                direction="column"
+                gap="3"
+                className={`
+                    p-2 mr-3 rounded-xl transition-all duration-200 h-full
+                    ${isOver 
+                    ? "bg-slate-500/20 transition-all" 
+                    : ""
+                    }
+                `}
+            >
+
 
             {tasks.length === 0 && (
                 <Text as="p">Brak zadań</Text>
             )}
 
             {tasks.map(task => (
-                <Dialog.Root key={task.id}>
+            <DraggableTask task={task} key={task.id}>
+                <Dialog.Root>
                     <ContextMenu.Root>
                         <ContextMenu.Trigger>
                             <Box className="w-full min-w-0 rounded-2xl hover:outline outline-slate-600 transition-all duration-100 cursor-pointer">
+                                
                                 <Dialog.Trigger>
                                     {/* 2. Card musi mieć w-full i resetować domyślne style przycisku triggera */}
                                     <Card className="w-full min-w-0 overflow-hidden" style={{ textAlign: 'left', display: 'block' }}>
@@ -377,9 +430,11 @@ export function ToDoColumn({ title, tasks, showTag=true, onUpdateTask, onAddComm
                         </Flex>
                     </Dialog.Content>
                 </Dialog.Root>
-            ))}
+                </DraggableTask>
+                ))}
             </Flex>
             </ScrollArea>
+            
         </Flex>
     );
 }
